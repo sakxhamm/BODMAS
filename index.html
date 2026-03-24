@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="BODMAS Battle - Interactive math game to master order of operations.">
+  <title>BODMAS Battle</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="bg-animated"></div>
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+  <div class="floating-shape shape-1"></div>
+  <div class="floating-shape shape-2"></div>
+  <div class="floating-shape shape-3"></div>
+  <canvas id="confetti-canvas" aria-hidden="true"></canvas>
+
+  <main class="container">
+    <header class="title-wrap">
+      <h1>⚔️ BODMAS Battle</h1>
+      <p>Master the order of operations and climb the leaderboard!</p>
+    </header>
+
+    <section id="start-screen" class="card screen active">
+      <h2>Ready to Play?</h2>
+      <p class="sub-text">Choose your challenge level and begin your battle.</p>
+      <div class="name-wrap">
+        <label for="player-name">Player Name</label>
+        <input id="player-name" class="name-input" type="text" maxlength="18" placeholder="Enter your name" required>
+        <p id="name-error" class="name-error"></p>
+      </div>
+
+      <div class="difficulty-grid">
+        <button class="difficulty-btn active" data-difficulty="easy">🟢 Easy</button>
+        <button class="difficulty-btn" data-difficulty="medium">🟠 Medium</button>
+        <button class="difficulty-btn" data-difficulty="hard">🔴 Hard</button>
+      </div>
+
+      <div class="game-info-grid">
+        <div><strong>Questions:</strong> 10</div>
+        <div><strong>Points:</strong> +10 correct</div>
+        <div><strong>Time:</strong> 10-15 sec each</div>
+        <div><strong>Bonus:</strong> Streak rewards 🔥</div>
+      </div>
+
+      <button id="play-btn" class="primary-btn">▶ Start Battle</button>
+      <p class="best-score">Best Score: <span id="best-score">0</span> ⭐</p>
+    </section>
+
+    <section id="game-screen" class="card screen">
+      <div class="floating-score-badge">🏆 <span id="score-badge">0</span></div>
+      <div class="hud">
+        <div class="hud-item">Question: <span id="question-count">1/10</span></div>
+        <div class="hud-item">Score: <span id="score">0</span></div>
+        <div class="hud-item">Streak: <span id="streak">0</span> 🔥 <span id="streak-pop" class="streak-pop"></span></div>
+      </div>
+
+      <div class="timer-wrap">
+        <div class="timer-text">⏱ Time left: <span id="timer">15</span>s</div>
+        <div class="timer-bar">
+          <div id="timer-progress"></div>
+        </div>
+      </div>
+
+      <div class="question-wrap">
+        <p class="question-label">Solve this using BODMAS:</p>
+        <h2 id="question">2 + 3 × 4</h2>
+      </div>
+
+      <div id="options" class="options-grid"></div>
+      <p id="feedback" class="feedback-text"></p>
+      <p id="explanation" class="explanation-text"></p>
+      <div class="result-actions compact">
+        <button id="back-to-menu-btn" class="secondary-btn">⬅ Back to Menu</button>
+      </div>
+    </section>
+
+    <section id="result-screen" class="card screen">
+      <h2>🏁 Battle Complete!</h2>
+      <p class="result-score">Your Final Score: <span id="final-score">0</span></p>
+      <p id="result-message" class="result-message"></p>
+      <div id="result-badge" class="result-badge"></div>
+
+      <div class="leaderboard-wrap">
+        <h3>🏆 Global Leaderboard</h3>
+        <div id="leaderboard-list" class="leaderboard-list"></div>
+      </div>
+
+      <div class="result-actions">
+        <button id="restart-btn" class="primary-btn">🔄 Play Again</button>
+        <button id="menu-btn" class="secondary-btn">🏠 Back to Menu</button>
+      </div>
+    </section>
+  </main>
+
+  <div id="loading-overlay" class="loading-overlay">
+    <div class="loader"></div>
+    <p>Preparing your battle...</p>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>
