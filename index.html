@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="BODMAS Battle - Interactive math game to master order of operations.">
-  <title>BODMAS Battle</title>
+  <meta name="description" content="BODMAS Lab – Learn, Visualize, Master. A guided educational experience for order of operations.">
+  <title>BODMAS Lab – Learn, Visualize, Master</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -14,95 +14,236 @@
   <div class="bg-animated"></div>
   <div class="bg-glow bg-glow-1"></div>
   <div class="bg-glow bg-glow-2"></div>
+  <canvas id="math-rain-canvas" class="math-rain-canvas" aria-hidden="true"></canvas>
   <div class="floating-shape shape-1"></div>
   <div class="floating-shape shape-2"></div>
   <div class="floating-shape shape-3"></div>
   <canvas id="confetti-canvas" aria-hidden="true"></canvas>
 
-  <main class="container">
+  <main class="container container-wide">
     <header class="title-wrap">
-      <h1>⚔️ BODMAS Battle</h1>
-      <p>Master the order of operations and climb the leaderboard!</p>
+      <p class="title-eyebrow">Educational Web Game</p>
+      <h1>BODMAS Lab</h1>
+      <p class="title-tagline">Learn, Visualize, Master</p>
+      <p class="title-sub">A guided journey from concept to challenge—not just a quiz.</p>
     </header>
 
-    <section id="start-screen" class="card screen active">
-      <h2>Ready to Play?</h2>
-      <p class="sub-text">Choose your challenge level and begin your battle.</p>
+    <!-- HUB: 7-phase journey -->
+    <section id="hub-screen" class="card screen active">
+      <h2>Your learning journey</h2>
+      <p class="sub-text">Complete each phase in order. Later phases unlock as you progress.</p>
+
+      <div id="journey-strip" class="journey-strip" role="list" aria-label="Seven learning phases"></div>
+
+      <div class="hub-progress-wrap" aria-hidden="true">
+        <div class="hub-progress-label">Overall journey</div>
+        <div class="hub-progress-track">
+          <div id="hub-progress-fill" class="hub-progress-fill"></div>
+        </div>
+      </div>
+
       <div class="name-wrap">
-        <label for="player-name">Player Name</label>
+        <label for="player-name">Player name</label>
         <input id="player-name" class="name-input" type="text" maxlength="18" placeholder="Enter your name" required>
         <p id="name-error" class="name-error"></p>
       </div>
 
       <div class="difficulty-grid">
-        <button class="difficulty-btn active" data-difficulty="easy">🟢 Easy</button>
-        <button class="difficulty-btn" data-difficulty="medium">🟠 Medium</button>
-        <button class="difficulty-btn" data-difficulty="hard">🔴 Hard</button>
+        <button type="button" class="difficulty-btn active" data-difficulty="easy">Easy</button>
+        <button type="button" class="difficulty-btn" data-difficulty="medium">Medium</button>
+        <button type="button" class="difficulty-btn" data-difficulty="hard">Hard</button>
       </div>
 
-      <div class="game-info-grid">
-        <div><strong>Questions:</strong> 10</div>
-        <div><strong>Points:</strong> +10 correct</div>
-        <div><strong>Time:</strong> 10-15 sec each</div>
-        <div><strong>Bonus:</strong> Streak rewards 🔥</div>
-      </div>
-
-      <button id="play-btn" class="primary-btn">▶ Start Battle</button>
-      <p class="best-score">Best Score: <span id="best-score">0</span> ⭐</p>
+      <button id="begin-journey-btn" type="button" class="primary-btn">Begin journey</button>
+      <p class="hub-hint">Starts at the first incomplete phase. You can replay any unlocked phase from the strip above.</p>
+      <p class="best-score">Best score: <span id="best-score">0</span></p>
     </section>
 
-    <section id="game-screen" class="card screen">
-      <div class="floating-score-badge">🏆 <span id="score-badge">0</span></div>
-      <div class="hud">
-        <div class="hud-item">Question: <span id="question-count">1/10</span></div>
-        <div class="hud-item">Score: <span id="score">0</span></div>
-        <div class="hud-item">Streak: <span id="streak">0</span> 🔥 <span id="streak-pop" class="streak-pop"></span></div>
+    <!-- PHASES 1–3: Concept, Why it matters, Rule breakdown -->
+    <section id="lab-screen" class="card screen lab-screen">
+      <div class="lab-top">
+        <button id="lab-back-btn" type="button" class="secondary-btn lab-back">← Back to hub</button>
+        <div id="lab-phase-badge" class="lab-phase-badge">Phase 1</div>
       </div>
 
-      <div class="timer-wrap">
-        <div class="timer-text">⏱ Time left: <span id="timer">15</span>s</div>
+      <!-- Phase 1: Concept introduction -->
+      <div id="lab-panel-1" class="lab-panel hidden">
+        <h3 class="lab-heading">What is BODMAS?</h3>
+        <p class="lab-lead"><strong>BODMAS</strong> is the agreed order for working out expressions with more than one operation. It stops everyone from getting different answers to the same sum.</p>
+        <div class="bodmas-letters" aria-hidden="true">
+          <span class="bodmas-letter" style="--d:0s">B</span>
+          <span class="bodmas-letter" style="--d:0.08s">O</span>
+          <span class="bodmas-letter" style="--d:0.16s">D</span>
+          <span class="bodmas-letter" style="--d:0.24s">M</span>
+          <span class="bodmas-letter" style="--d:0.32s">A</span>
+          <span class="bodmas-letter" style="--d:0.4s">S</span>
+        </div>
+        <div class="mnemonic-grid mnemonic-grid-stagger" aria-hidden="true">
+          <div class="mnemonic-cell mnemonic-card"><span class="mnemonic-letter">B</span><span class="mnemonic-word">Brackets</span></div>
+          <div class="mnemonic-cell mnemonic-card"><span class="mnemonic-letter">O</span><span class="mnemonic-word">Orders</span></div>
+          <div class="mnemonic-cell mnemonic-card"><span class="mnemonic-letter">D</span><span class="mnemonic-word">Division</span></div>
+          <div class="mnemonic-cell mnemonic-card"><span class="mnemonic-letter">M</span><span class="mnemonic-word">Multiplication</span></div>
+          <div class="mnemonic-cell mnemonic-card"><span class="mnemonic-letter">A</span><span class="mnemonic-word">Addition</span></div>
+          <div class="mnemonic-cell mnemonic-card"><span class="mnemonic-letter">S</span><span class="mnemonic-word">Subtraction</span></div>
+        </div>
+        <p class="lab-body">In this lab we focus on <strong>brackets</strong>, then <strong>× and ÷</strong> (left to right), then <strong>+ and −</strong> (left to right).</p>
+        <h4 class="lab-subheading">Why use it?</h4>
+        <p class="lab-body">Without a fixed order, <code>2 + 3 × 4</code> could be read as “add first” or “multiply first.” BODMAS picks one clear path so results match textbooks, exams, and calculators.</p>
+        <h4 class="lab-subheading">Where it shows up</h4>
+        <ul class="lab-list">
+          <li>School maths and standardised tests</li>
+          <li>Science formulas (e.g. substituting values)</li>
+          <li>Programming and spreadsheets (similar rules)</li>
+        </ul>
+        <button id="complete-phase-1" type="button" class="primary-btn">Complete phase 1</button>
+      </div>
+
+      <!-- Phase 2: Why BODMAS matters -->
+      <div id="lab-panel-2" class="lab-panel hidden">
+        <h3 class="lab-heading">Same expression, two stories</h3>
+        <p class="lab-lead">Take <span class="expr-inline">3 + 4 × 2</span>. If you mix up the order, the answer changes completely.</p>
+        <div class="compare-grid">
+          <div class="compare-card compare-wrong compare-anim-wrong">
+            <div class="compare-label">Wrong order (left to right only)</div>
+            <div class="compare-expr">3 + 4 × 2</div>
+            <div class="compare-steps">
+              <p>Do <span class="hl-bad">3 + 4</span> first → 7</p>
+              <p>Then 7 × 2 = <strong>14</strong></p>
+            </div>
+            <p class="compare-note">This ignores that × is stronger than +.</p>
+          </div>
+          <div class="compare-card compare-right compare-anim-right">
+            <div class="compare-label">Correct order (BODMAS)</div>
+            <div class="compare-expr">3 + 4 × 2</div>
+            <div class="compare-steps">
+              <p>Do <span class="hl-good">4 × 2</span> first → 8</p>
+              <p>Then 3 + 8 = <strong>11</strong></p>
+            </div>
+            <p class="compare-note">Multiplication before addition—one clear answer.</p>
+          </div>
+        </div>
+        <button id="complete-phase-2" type="button" class="primary-btn">Complete phase 2</button>
+      </div>
+
+      <!-- Phase 3: Rule breakdown (3 sub-screens) -->
+      <div id="lab-panel-3" class="lab-panel hidden">
+        <div id="rule-sub-1" class="rule-sub">
+          <h3 class="lab-heading">Brackets first</h3>
+          <p class="lab-lead">Whatever is inside brackets is treated as one value before the rest of the expression.</p>
+          <div class="rule-demo rule-card-anim">
+            <div class="rule-demo-expr"><span class="token-y">(</span><span class="token-y">5 + 3</span><span class="token-y">)</span> × 2</div>
+            <p class="rule-caption"><span class="hl-warn">5 + 3</span> is solved first → 8, then 8 × 2 = 16.</p>
+          </div>
+          <p class="lab-body"><strong>Rule:</strong> B — Brackets group work; simplify inside them before applying BODMAS to the outside.</p>
+          <button type="button" class="secondary-btn rule-next" data-next="2">Next: Division &amp; Multiplication →</button>
+        </div>
+        <div id="rule-sub-2" class="rule-sub hidden">
+          <h3 class="lab-heading">Division &amp; Multiplication</h3>
+          <p class="lab-lead">After brackets, × and ÷ come <strong>before</strong> + and −. When several × or ÷ appear, work <strong>left to right</strong>.</p>
+          <div class="rule-demo rule-card-anim">
+            <div class="rule-demo-expr">10 + <span class="token-y">12 ÷ 3</span> × 2</div>
+            <p class="rule-caption">First <span class="hl-warn">12 ÷ 3</span> = 4, then 4 × 2 = 8, then 10 + 8 = 18.</p>
+          </div>
+          <p class="lab-body"><strong>Rule:</strong> D/M — Same priority band; tie-break with left-to-right order.</p>
+          <button type="button" class="secondary-btn rule-next" data-next="3">Next: Addition &amp; Subtraction →</button>
+        </div>
+        <div id="rule-sub-3" class="rule-sub hidden">
+          <h3 class="lab-heading">Addition &amp; Subtraction</h3>
+          <p class="lab-lead">+ and − happen last. If several appear in a row, work <strong>left to right</strong>.</p>
+          <div class="rule-demo rule-card-anim">
+            <div class="rule-demo-expr">10 − 3 + 2</div>
+            <p class="rule-caption"><span class="hl-warn">10 − 3</span> first → 7, then 7 + 2 = 9 (not 10 − 5).</p>
+          </div>
+          <p class="lab-body"><strong>Rule:</strong> A/S — Weakest operations; left-to-right when tied.</p>
+          <button id="complete-phase-3" type="button" class="primary-btn">Complete phase 3</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PHASES 4–7: Visual solver, Interactive, Practice, Challenge -->
+    <section id="game-screen" class="card screen">
+      <div id="journey-mini" class="journey-mini hidden" aria-label="Current lab phase"></div>
+      <div class="floating-score-badge">🏆 <span id="score-badge">0</span></div>
+      <div class="hud">
+        <div class="hud-item"><span id="hud-progress-label">Step</span>: <span id="question-count">1/6</span></div>
+        <div class="hud-item">Score: <span id="score">0</span></div>
+        <div class="hud-item">Streak: <span id="streak">0</span> <span id="streak-pop" class="streak-pop"></span></div>
+      </div>
+
+      <div class="session-progress-wrap">
+        <div class="session-progress-label">Phase progress</div>
+        <div class="session-progress-track">
+          <div id="session-progress-fill" class="session-progress-fill"></div>
+        </div>
+      </div>
+
+      <div class="learning-banner">
+        <div id="current-mode-title" class="learning-banner-title">Visual solver</div>
+        <div id="learning-message" class="learning-banner-text"></div>
+      </div>
+
+      <div id="timer-wrap" class="timer-wrap hidden">
+        <div class="timer-text">Time left: <span id="timer">0</span>s</div>
         <div class="timer-bar">
           <div id="timer-progress"></div>
         </div>
       </div>
 
-      <div class="question-wrap">
-        <p class="question-label">Solve this using BODMAS:</p>
-        <h2 id="question">2 + 3 × 4</h2>
+      <div id="expression-wrap" class="question-wrap">
+        <p id="question-label" class="question-label">Expression</p>
+        <div id="expression-visual" class="expression-visual" role="group" aria-label="Expression"></div>
       </div>
 
-      <div id="options" class="options-grid"></div>
+      <div id="interactive-options" class="options-grid hidden"></div>
+      <div id="mcq-options" class="options-grid hidden"></div>
+
       <p id="feedback" class="feedback-text"></p>
+      <div id="step-explanation" class="step-explanation hidden"></div>
       <p id="explanation" class="explanation-text"></p>
+
+      <div id="history-wrap" class="history-wrap">
+        <div class="history-title">Step history</div>
+        <div id="history-list" class="history-list"></div>
+      </div>
+
+      <div id="wrong-popup" class="wrong-popup hidden" role="status" aria-live="polite">
+        <div id="wrong-popup-text"></div>
+      </div>
+
+      <div class="result-actions compact learning-actions">
+        <button id="next-step-btn" type="button" class="primary-btn btn-next-step hidden">Next step</button>
+        <button id="next-expression-btn" type="button" class="primary-btn btn-next-round hidden">Next expression</button>
+      </div>
       <div class="result-actions compact">
-        <button id="back-to-menu-btn" class="secondary-btn">⬅ Back to Menu</button>
+        <button id="back-to-menu-btn" type="button" class="secondary-btn">← Back to hub</button>
       </div>
     </section>
 
     <section id="result-screen" class="card screen">
-      <h2>🏁 Battle Complete!</h2>
-      <p class="result-score">Your Final Score: <span id="final-score">0</span></p>
+      <h2>Session complete</h2>
+      <p class="result-score">Score: <span id="final-score">0</span></p>
       <p id="result-message" class="result-message"></p>
       <div id="result-badge" class="result-badge"></div>
 
       <div class="leaderboard-wrap">
-        <h3>🏆 Global Leaderboard</h3>
+        <h3>Leaderboard</h3>
         <div id="leaderboard-list" class="leaderboard-list"></div>
       </div>
 
       <div class="result-actions">
-        <button id="restart-btn" class="primary-btn">🔄 Play Again</button>
-        <button id="menu-btn" class="secondary-btn">🏠 Back to Menu</button>
+        <button id="restart-btn" type="button" class="primary-btn">Continue journey</button>
+        <button id="menu-btn" type="button" class="secondary-btn">Back to hub</button>
       </div>
     </section>
   </main>
 
   <div id="loading-overlay" class="loading-overlay">
     <div class="loader"></div>
-    <p>Preparing your battle...</p>
+    <p>Loading BODMAS Lab…</p>
   </div>
 
   <script src="js/api.js"></script>
+  <script src="js/math-rain.js"></script>
   <script src="js/script.js"></script>
 </body>
 </html>
